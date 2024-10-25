@@ -78,17 +78,13 @@ ZSH_CUSTOM=$DOTFILES
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(artisan git)
+plugins=(artisan git macos npm composer docker docker-compose laravel)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -109,30 +105,104 @@ export LANG=en_US.UTF-8
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Herd injected PHP binary.
-export PHP_INI_SCAN_DIR="$HOME/Library/Application Support/Herd/config/php/":$PHP_INI_SCAN_DIR
 
-# Herd injected NVM configuration
-export NVM_DIR="$HOME/Library/Application Support/Herd/config/nvm"
 
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# Load rvm
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
 
-[[ -f "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh" ]] && builtin source "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh"
+export PATH="$PATH:$HOME/.rvm/bin"
+. $HOME/.dotfiles/zsh/z.sh
 
-# Herd injected PHP 7.4 configuration.
-export HERD_PHP_74_INI_SCAN_DIR="/Users/driesvints/Library/Application Support/Herd/config/php/74/"
+# Alias hub to git
+eval "$(hub alias -s)"
 
-# Herd injected PHP 8.3 configuration.
-export HERD_PHP_83_INI_SCAN_DIR="/Users/driesvints/Library/Application Support/Herd/config/php/83/"
+# Sudoless npm https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md
+NPM_PACKAGES="${HOME}/.npm-packages"
+export PATH="$PATH:$NPM_PACKAGES/bin"
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
-# Herd injected PHP 8.2 configuration.
-export HERD_PHP_82_INI_SCAN_DIR="/Users/driesvints/Library/Application Support/Herd/config/php/82/"
+export PATH=$HOME/.dotfiles/bin:$PATH
+[[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
-# Herd injected PHP 8.1 configuration.
-export HERD_PHP_81_INI_SCAN_DIR="/Users/driesvints/Library/Application Support/Herd/config/php/81/"
+# Import ssh keys in keychain
+ssh-add -A 2>/dev/null;
 
-# Herd injected PHP 8.0 configuration.
-export HERD_PHP_80_INI_SCAN_DIR="/Users/driesvints/Library/Application Support/Herd/config/php/80/"
 
-# Herd injected PHP binary.
-export PATH="/Users/driesvints/Library/Application Support/Herd/bin/":$PATH
+# Extra paths
+export PATH="$HOME/.composer/vendor/bin:$PATH"
+export PATH=/usr/local/bin:$PATH
+export PATH="$HOME/.yarn/bin:$PATH"
+export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+export PATH="/usr/local/opt/node@8/bin:$PATH"
+
+export PATH="/usr/local/opt/node@12/bin:$PATH"
+export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+export GPG_TTY=$(tty)
+
+# Make vim the default editor
+export EDITOR="vim"
+
+# Larger bash history (allow 32³ entries; default is 500)
+export HISTSIZE=32768
+export HISTFILESIZE=$HISTSIZE
+export HISTCONTROL=ignoredups
+# Make some commands not show up in history
+export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
+# And include the parameter for ZSH
+export HISTORY_IGNORE="(ls|cd|cd -|pwd|exit|date|* --help)"
+
+# Prefer GB English and use UTF-8
+export LANG="en_GB.UTF-8"
+export LC_ALL="en_GB.UTF-8"
+
+# Highlight section titles in manual pages
+export LESS_TERMCAP_md="$ORANGE"
+
+# Don’t clear the screen after quitting a manual page
+export MANPAGER="less -X"
+
+# Always enable colored `grep` output
+export GREP_OPTIONS="--color=auto"
+
+# Do not auto update brew
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+# Docker
+function ssh-docker() {
+   docker exec -it "$@" bash
+}
+
+# Create a new directory and enter it
+function mkd() {
+   mkdir -p "$@" && cd "$@"
+}
+
+archive () {
+   zip -r "$1".zip -i "$1" ;
+}
+
+function weather() {
+   local city="${1:-Newcastle-Upon-Tyne}"
+   curl http://wttr.in/${city// /+}\?F
+}
+
+# Scrape a single webpage with all assets
+function scrapeUrl() {
+    wget --adjust-extension --convert-links --page-requisites --span-hosts --no-host-directories "$1"
+}
+
+#  Commit everything
+function commit() {
+  commitMessage="$*"
+
+  if [ "$commitMessage" = "" ]; then
+     commitMessage="wip"
+  fi
+
+  git add .
+  eval "git commit -S -a -m '${commitMessage}'"
+}
