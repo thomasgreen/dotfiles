@@ -30,18 +30,19 @@ brew bundle --file ./Brewfile
 mysql -u root -e "ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
 
 # Create a projects directories
-mkdir $HOME/Code
-mkdir $HOME/Herd
-
-# Create Code subdirectories
-mkdir $HOME/Code/blade-ui-kit
-mkdir $HOME/Code/laravel
-
-# Clone Github repositories
-./clone.sh
+mkdir $HOME/code
 
 # Symlink the Mackup config file to the home directory
 ln -s ./.mackup.cfg $HOME/.mackup.cfg
+
+# Symlink vim prefs
+rm $HOME/.vimrc
+rm $HOME/.vim
+rm -rf ~/.vim_runtime
+git clone --depth=1 https://github.com/amix/vimrc.git ~/.vim_runtime
+sh ~/.vim_runtime/install_awesome_vimrc.sh
+ln -s $DOTFILES/vim/my_configs.vim $HOME/.vim_runtime/my_configs.vim
+ln -s $HOME/.vimrc $HOME/.ideavimrc
 
 # Set macOS preferences - we will run this last because this will reload the shell
 source ./.macos
