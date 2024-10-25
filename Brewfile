@@ -60,6 +60,7 @@ cask 'alfred'
 cask 'flux'
 cask 'paw'
 cask 'warp'
+cask 'raycast'
 
 # Quicklook
 cask 'qlmarkdown'
