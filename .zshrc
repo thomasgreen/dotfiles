@@ -206,3 +206,16 @@ function commit() {
   git add .
   eval "git commit -S -a -m '${commitMessage}'"
 }
+
+# Herd injected PHP 8.3 configuration.
+export HERD_PHP_83_INI_SCAN_DIR="/Users/thomasgreen/Library/Application Support/Herd/config/php/83/"
+
+
+# Herd injected NVM configuration
+export NVM_DIR="/Users/thomasgreen/Library/Application Support/Herd/config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+[[ -f "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh" ]] && builtin source "/Applications/Herd.app/Contents/Resources/config/shell/zshrc.zsh"
+
+# Herd injected PHP binary.
+export PATH="/Users/thomasgreen/Library/Application Support/Herd/bin/":$PATH

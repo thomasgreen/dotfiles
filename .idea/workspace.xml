@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="0d91702a-57b3-47f9-aa7d-3b6781144007" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/bin/setup" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.zshrc" beforeDir="false" afterPath="$PROJECT_DIR$/.zshrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Brewfile" beforeDir="false" afterPath="$PROJECT_DIR$/Brewfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +60,7 @@
       <option name="presentableId" value="Default" />
       <updated>1729802961078</updated>
       <workItem from="1729802962832" duration="89000" />
-      <workItem from="1729861848066" duration="311000" />
+      <workItem from="1729861848066" duration="1117000" />
     </task>
     <servers />
   </component>
